@@ -52,7 +52,7 @@ def create_diffusion_by_points(
 ):
     betas = gd.get_named_beta_schedule(noise_schedule, diffusion_steps)
     loss_type = gd.LossType.MSE
-    return diffusion.respace.SpacedDiffusion(
+    return SpacedDiffusion(
         use_timesteps=timestemps,
         betas=betas,
         model_mean_type=gd.ModelMeanType.EPSILON,
