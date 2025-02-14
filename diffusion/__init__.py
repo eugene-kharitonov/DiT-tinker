@@ -45,7 +45,7 @@ def create_diffusion(
         # rescale_timesteps=rescale_timesteps,
     )
 
-def create_diffusion_by_points(points):
+def create_diffusion_by_points(
     timestemps,
     noise_schedule="linear", 
     diffusion_steps=1000
