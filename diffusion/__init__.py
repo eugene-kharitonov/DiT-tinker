@@ -44,3 +44,18 @@ def create_diffusion(
         loss_type=loss_type
         # rescale_timesteps=rescale_timesteps,
     )
+
+def create_diffusion_by_points(points):
+    timestemps,
+    noise_schedule="linear", 
+    diffusion_steps=1000
+):
+    betas = gd.get_named_beta_schedule(noise_schedule, diffusion_steps)
+    loss_type = gd.LossType.MSE
+    return diffusion.respace.SpacedDiffusion(
+        use_timesteps=timestemps,
+        betas=betas,
+        model_mean_type=gd.ModelMeanType.EPSILON,
+        model_var_type=gd.ModelVarType.LEARNED_RANGE,
+        loss_type=loss_type
+    )

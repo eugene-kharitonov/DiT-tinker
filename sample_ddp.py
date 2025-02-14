@@ -15,7 +15,7 @@ import torch
 import torch.distributed as dist
 from models import DiT_models
 from download import find_model
-from diffusion import create_diffusion
+from diffusion import create_diffusion, create_diffusion_by_points
 from diffusers.models import AutoencoderKL
 from tqdm import tqdm
 import os
@@ -75,7 +75,13 @@ def main(args):
     state_dict = find_model(ckpt_path)
     model.load_state_dict(state_dict)
     model.eval()  # important!
-    diffusion = create_diffusion(str(args.num_sampling_steps))
+    if not args.points:
+        diffusion = create_diffusion(str(args.num_sampling_steps))
+    else:
+        points = args.points.split(",")
+        points = [int(p) for p in points]
+        diffusion = create_diffusion_by_points(points)
+
     vae = AutoencoderKL.from_pretrained(f"stabilityai/sd-vae-ft-{args.vae}").to(device)
     assert args.cfg_scale >= 1.0, "In almost all cases, cfg_scale be >= 1.0"
     using_cfg = args.cfg_scale > 1.0
@@ -162,5 +168,6 @@ if __name__ == "__main__":
                         help="By default, use TF32 matmuls. This massively accelerates sampling on Ampere GPUs.")
     parser.add_argument("--ckpt", type=str, default=None,
                         help="Optional path to a DiT checkpoint (default: auto-download a pre-trained DiT-XL/2 model).")
+    parser.add_argument("--points", type=str)
     args = parser.parse_args()
     main(args)
