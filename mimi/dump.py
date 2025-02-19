@@ -97,7 +97,7 @@ def dump(root, loader, mimi):
 def main():
     hf_repo = 'kyutai/moshika-pytorch-bf16'
     path = loaders.hf_hub_download(hf_repo, loaders.MIMI_NAME)
-    mimi = loaders.get_mimi(path, 'cuda').eval()
+    mimi = loaders.get_mimi(path, 'cuda').eval().cuda()
     print('Obtained codec')
 
     dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='.', url=SPLIT)
