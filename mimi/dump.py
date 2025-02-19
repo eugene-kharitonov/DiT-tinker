@@ -7,7 +7,6 @@ import os
 
 
 
-SPLIT = 'dev-clean'
 BSZ = 16
 
 
@@ -84,7 +83,7 @@ def dump(root, loader, mimi):
     emb = emb.cpu().numpy()
     
     for j in range(emb.shape[0]):
-      fname = f'{SPLIT}/{ex_id}.npy'
+      fname = f'{root}/{ex_id}.npy'
       np.save(fname, emb[j])
       ex_id += 1
     
@@ -100,15 +99,15 @@ def main():
     mimi = loaders.get_mimi(path, 'cuda').eval().cuda()
     print('Obtained codec')
 
-    dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='.', url=SPLIT)
-    print('Getting dataset')
-    sliced = RandomSliceDataset(dataset, seconds_to_extract=5.04)
-    loader = torch.utils.data.DataLoader(sliced, batch_size=BSZ, shuffle=False, collate_fn=torch.stack)
+    for split in ["dev-clean", "train-clean-100", "train-clean-360"]:
+        print(f'Getting dataset {split}')
+        dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='.', url=split)
+        sliced = RandomSliceDataset(dataset, seconds_to_extract=5.04)
+        loader = torch.utils.data.DataLoader(sliced, batch_size=BSZ, shuffle=False, collate_fn=torch.stack)
 
-    os.mkdir(SPLIT)
-
-    print('Getting latents')
-    dump(SPLIT, loader, mimi)
+        os.mkdir(split)
+        print('Getting latents')
+        dump(split, loader, mimi)
 	
 
 
