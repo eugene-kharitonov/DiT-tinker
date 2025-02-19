@@ -7,7 +7,7 @@ import os
 
 
 
-SPLIT = 'dev_clean'
+SPLIT = 'dev-clean'
 BSZ = 16
 
 
