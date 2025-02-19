@@ -99,7 +99,8 @@ def main():
     mimi = loaders.get_mimi(path, 'cuda').eval().cuda()
     print('Obtained codec')
 
-    for split in ["dev-clean", "train-clean-100", "train-clean-360"]:
+    #for split in ["dev-clean", "train-clean-100", "train-clean-360"]:
+    for split in ["train-clean-360"]:
         print(f'Getting dataset {split}')
         dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='/root/', url=split)
         sliced = RandomSliceDataset(dataset, seconds_to_extract=5.04)
