@@ -56,7 +56,7 @@ class RandomSliceDataset(torch.utils.data.Dataset):
     return torch.from_numpy(audio)
 
 @torch.no_grad
-def embed_audio(x, quantize=False):
+def embed_audio(x, mimi, quantize=False):
   emb = mimi._encode_to_unquantized_latent(x)
   if quantize:
     codes = mimi.quantizer.encode(emb)
@@ -75,12 +75,12 @@ def embed_audio(x, quantize=False):
 import time
 import numpy as np
 
-def dump(root, loader):
+def dump(root, loader, mimi):
   start = time.time()
   ex_id = 0
   for i, b in enumerate(loader):
     b = b.cuda()
-    emb = embed_audio(b)
+    emb = embed_audio(b, mimi)
     emb = emb.cpu().numpy()
     
     for j in range(emb.shape[0]):
@@ -97,16 +97,18 @@ def dump(root, loader):
 def main():
 	hf_repo = 'kyutai/moshika-pytorch-bf16'
 	path = loaders.hf_hub_download(hf_repo, loaders.MIMI_NAME)
-
 	mimi = loaders.get_mimi(path, 'cuda').eval()
+    print('Obtained codec')
 
 	dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='.', url=SPLIT)
+    print('Getting dataset')
 	sliced = RandomSliceDataset(dataset, seconds_to_extract=5.04)
 	loader = torch.utils.data.DataLoader(sliced, batch_size=BSZ, shuffle=False, collate_fn=torch.stack)
 
 	os.mkdir(SPLIT)
 
-	dump(SPLIT, loader)
+    print('Getting latents')
+	dump(SPLIT, loader, mimi)
 	
 
 
