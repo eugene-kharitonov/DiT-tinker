@@ -101,7 +101,7 @@ def main():
 
     for split in ["dev-clean", "train-clean-100", "train-clean-360"]:
         print(f'Getting dataset {split}')
-        dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='.', url=split)
+        dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='~/', url=split)
         sliced = RandomSliceDataset(dataset, seconds_to_extract=5.04)
         loader = torch.utils.data.DataLoader(sliced, batch_size=BSZ, shuffle=False, collate_fn=torch.stack)
 
