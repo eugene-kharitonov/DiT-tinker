@@ -84,7 +84,7 @@ def dump(root, loader, mimi):
     emb = emb.cpu().numpy()
     
     for j in range(emb.shape[0]):
-      fname = f'{ex_id}.npy'
+      fname = f'{SPLIT}/{ex_id}.npy'
       np.save(fname, emb[j])
       ex_id += 1
     
