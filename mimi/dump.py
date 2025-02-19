@@ -95,20 +95,20 @@ def dump(root, loader, mimi):
 
 
 def main():
-	hf_repo = 'kyutai/moshika-pytorch-bf16'
-	path = loaders.hf_hub_download(hf_repo, loaders.MIMI_NAME)
-	mimi = loaders.get_mimi(path, 'cuda').eval()
+    hf_repo = 'kyutai/moshika-pytorch-bf16'
+    path = loaders.hf_hub_download(hf_repo, loaders.MIMI_NAME)
+    mimi = loaders.get_mimi(path, 'cuda').eval()
     print('Obtained codec')
 
-	dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='.', url=SPLIT)
+    dataset = torchaudio.datasets.LIBRISPEECH(download=True, root='.', url=SPLIT)
     print('Getting dataset')
-	sliced = RandomSliceDataset(dataset, seconds_to_extract=5.04)
-	loader = torch.utils.data.DataLoader(sliced, batch_size=BSZ, shuffle=False, collate_fn=torch.stack)
+    sliced = RandomSliceDataset(dataset, seconds_to_extract=5.04)
+    loader = torch.utils.data.DataLoader(sliced, batch_size=BSZ, shuffle=False, collate_fn=torch.stack)
 
-	os.mkdir(SPLIT)
+    os.mkdir(SPLIT)
 
     print('Getting latents')
-	dump(SPLIT, loader, mimi)
+    dump(SPLIT, loader, mimi)
 	
 
 
